@@ -1,6 +1,7 @@
 # google-coral-workspace
 
 [![actionlint](https://github.com/vpayno/google-coral-workspace/actions/workflows/gh-actions.yaml/badge.svg?branch=main)](https://github.com/vpayno/google-coral-workspace/actions/workflows/gh-actions.yaml)
+[![git](https://github.com/vpayno/google-coral-workspace/actions/workflows/git.yaml/badge.svg?branch=main)](https://github.com/vpayno/google-coral-workspace/actions/workflows/git.yaml)
 [![json](https://github.com/vpayno/google-coral-workspace/actions/workflows/json.yaml/badge.svg?branch=main)](https://github.com/vpayno/google-coral-workspace/actions/workflows/json.yaml)
 [![markdown](https://github.com/vpayno/google-coral-workspace/actions/workflows/markdown.yaml/badge.svg?branch=main)](https://github.com/vpayno/google-coral-workspace/actions/workflows/markdown.yaml)
 [![spellcheck](https://github.com/vpayno/google-coral-workspace/actions/workflows/spellcheck.yaml/badge.svg?branch=main)](https://github.com/vpayno/google-coral-workspace/actions/workflows/spellcheck.yaml)
