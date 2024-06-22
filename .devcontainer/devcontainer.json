@@ -1,0 +1,32 @@
+{
+	"name": "google-coral-workspace",
+	"image": "vpayno/ci-devcontainer-coral:latest",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"target": "vpayno/ci-devcontainer-coral"
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": []
+		}
+	},
+	"settings": {
+		"terminal.integrated.shell.linux": "/usr/bin/env bash"
+	},
+	"features": {},
+	"forwardPorts": [],
+	"mounts": [
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"portsAttributes": {},
+	"initializeCommand": ": docker pull vpayno/ci-devcontainer-coral:latest",
+	"postCreateCommand": "cd /workspaces/google-coral-workspace/; tree .devcontainer/; ./.devcontainer/scripts/dc-up-post-create-command.sh user:${localEnv:USER}",
+	"remoteUser": "root",
+	"runArgs": [
+		"--name",
+		"${localEnv:USER}_google-coral-workspace",
+		"--add-host=host.docker.internal:host-gateway"
+	],
+	"shutdownAction": "none"
+}

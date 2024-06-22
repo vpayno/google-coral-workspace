@@ -1,0 +1,186 @@
+#!/bin/bash
+#
+# .github/citools/python/python-setup-install
+#
+
+# shellcheck disable=SC1091
+source ../../.github/citools/includes/wrapper-library || exit
+
+declare -i retval=0
+
+main() {
+	printf "Python Installation\n\n"
+
+	print_ruler
+
+	echo Running: sudo apt update
+	time sudo apt update || track_errors
+
+	print_ruler
+
+	local -a debs
+	debs=(
+		autoconf
+		automake
+		bc
+		bison
+		build-essential
+		curl
+		g++
+		gcc
+		git
+		gnupg
+		libbz2-dev
+		libc6-dev
+		libffi-dev
+		libgdbm-dev
+		libgmp-dev
+		liblzma-dev
+		libncurses5-dev
+		libreadline-dev
+		libsqlite3-dev
+		libssl-dev
+		libtool
+		libyaml-dev
+		make
+		pkg-config
+		sqlite3
+		zlib1g-dev
+	)
+
+	echo Running: sudo apt update
+	time sudo apt update || track_errors
+
+	print_ruler
+
+	echo Running: sudo apt install -y "${debs[@]}"
+	time sudo apt install -y "${debs[@]}" || track_errors
+
+	print_ruler
+
+	echo Running: sudo apt-mark manual "${debs[@]}"
+	time sudo apt-mark manual "${debs[@]}" || track_errors
+
+	print_ruler
+
+	echo Running: export PYTHON_CONFIGURE_OPTS="--enable-shared"
+	export PYTHON_CONFIGURE_OPTS="--enable-shared"
+
+	print_ruler
+
+	printf "Configuring Shell: "
+	tee /etc/profile.d/python.sh <<-EOF
+		#
+		# /etc/profile.d/python.sh
+		#
+
+	EOF
+	printf "done\n"
+
+	# shellcheck disable=SC1090
+	echo Running: source /etc/profile.d/python.sh
+	source /etc/profile.d/python.sh || track_errors
+	printf "done\n"
+
+	print_ruler
+
+	echo Running: python3.9 --version
+	time python3.9 --version || track_errors
+
+	print_ruler
+
+	local -a pip_packages
+	pip_packages=(
+		bandit[toml]
+		black
+		coverage
+		db-sqlite3
+		flake8
+		flawfinder
+		flynt
+		ipykernel
+		ipython
+		isort
+		itsdangerous
+		jsonlint
+		jsonschema
+		mccabe
+		mypy
+		mypy-extensions
+		pep8
+		pep8-naming
+		pexpect
+		proselint
+		prospector
+		pycobertura
+		pycodestyle
+		pydantic
+		pydocstyle
+		pyflakes
+		pylint
+		pylint-flask
+		pyright
+		pysqlite3
+		pytest
+		pytest-cov
+		pytest-docker
+		pytest-randomly
+		python-dateutil
+		python-lsp-black
+		python-lsp-jsonrpc
+		python-lsp-ruff
+		python-lsp-server
+		python-utils
+		pytype
+		rich-cli
+		ruff
+		safety
+		textual[dev]
+		textualize_see
+		tmuxp
+		toml
+		tomli
+		tomlkit
+		typeguard
+		types-Pygments
+		types-colorama
+		types-docutils
+		types-mock
+		types-setuptools
+		typing_extensions
+		xmlformatter
+		yamlfix
+		yamllint
+		yapf
+	)
+
+	echo curl -sS https://bootstrap.pypa.io/get-pip.py \| python3.9
+	time curl -sS https://bootstrap.pypa.io/get-pip.py | python3.9
+
+	print_ruler
+
+	echo pip --version
+	pip --version
+
+	print_ruler
+
+	echo Running: pip install pdm
+	time pip install pdm  || track_errors
+
+	print_ruler
+
+	echo Running: pip install --ignore-installed --upgrade pyyaml
+	time pip install --ignore-installed --upgrade pyyaml
+
+	print_ruler
+
+	echo Running: pip install "${pip_packages[@]}"
+	time pip install "${pip_packages[@]}" || track_errors
+
+	print_ruler
+
+	echo Exit code: "${retval}"
+	return "${retval}"
+}
+
+time main "${@}"
