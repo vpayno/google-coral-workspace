@@ -41,6 +41,7 @@ export default {
         'ci',
         'coral',
         'devcontainer',
+        'doc',
         'docs',
         'feat',
         'fix',
@@ -97,6 +98,11 @@ export default {
             description: 'A bug fix',
             title: 'Bug Fixes',
             emoji: '🐛',
+          },
+          doc: {
+            description: 'Documentation only changes',
+            title: 'Documentation',
+            emoji: '📚',
           },
           docs: {
             description: 'Documentation only changes',
