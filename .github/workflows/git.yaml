@@ -5,7 +5,7 @@
 # https://www.conventionalcommits.org/en/v1.0.0/
 # https://github.com/wagoid/commitlint-github-action
 name: git
-on:  # yamllint disable-line rule:truthy
+on: # yamllint disable-line rule:truthy
   push:
     branches:
       - main
