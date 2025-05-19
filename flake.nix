@@ -17,6 +17,7 @@
 
   outputs =
     {
+      nixpkgs,
       flake-utils,
       treefmt-conf,
       ...
@@ -27,7 +28,32 @@
         "aarch64-linux"
       ];
     in
-    flake-utils.lib.eachSystem systems (system: {
-      formatter = treefmt-conf.formatter.${system};
-    });
+    flake-utils.lib.eachSystem systems (
+      system:
+      let
+        pkgs = import nixpkgs {
+          system = "x86_64-linux";
+        };
+
+        pythonSet = pkgs.python3.withPackages (
+          ps: with ps; [
+            ipython
+          ]
+        );
+      in
+      {
+        formatter = treefmt-conf.formatter.${system};
+
+        devShells = {
+          default = pkgs.mkShell {
+
+            buildInputs = with pkgs; [
+              glow
+              pythonSet
+              runme
+            ];
+          };
+        };
+      }
+    );
 }
