@@ -41,6 +41,7 @@
           system = "x86_64-linux";
         };
 
+        # virtual env alternative
         pythonSet = pkgs.python3.withPackages (
           ps: with ps; [
             ipython
@@ -59,13 +60,22 @@
             packages =
               with pkgs;
               [
+                coreutils-full
                 glow
+                moreutils
                 runme
               ]
               ++ [
                 self.packages.${system}.pip2nix
                 pythonSet
               ];
+
+            shellHook = ''
+              unset PYTHONPATH;
+
+              ${pkgs.lib.getExe pkgs.cowsay} "Welcome to .#default devShell!";
+              printf "\n"
+            '';
           };
         };
       }
