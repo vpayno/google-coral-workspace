@@ -56,8 +56,7 @@
 
         devShells = {
           default = pkgs.mkShell {
-
-            buildInputs =
+            packages =
               with pkgs;
               [
                 glow
