@@ -13,13 +13,19 @@
       url = "github:vpayno/nix-treefmt-conf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    pip2nix = {
+      url = "github:nix-community/pip2nix";
+    };
   };
 
   outputs =
     {
+      self,
       nixpkgs,
       flake-utils,
       treefmt-conf,
+      pip2nix,
       ...
     }:
     let
@@ -44,14 +50,23 @@
       {
         formatter = treefmt-conf.formatter.${system};
 
+        packages = {
+          pip2nix = pip2nix.packages.${system}.pip2nix.python39;
+        };
+
         devShells = {
           default = pkgs.mkShell {
 
-            buildInputs = with pkgs; [
-              glow
-              pythonSet
-              runme
-            ];
+            buildInputs =
+              with pkgs;
+              [
+                glow
+                runme
+              ]
+              ++ [
+                self.packages.${system}.pip2nix
+                pythonSet
+              ];
           };
         };
       }
