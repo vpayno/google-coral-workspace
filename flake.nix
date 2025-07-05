@@ -3,7 +3,9 @@
   description = "Google Coral Workspace with Python 3.9";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-23.11"; # we need python 3.9
+    nixpkgs-2311.url = "github:nixos/nixpkgs?ref=nixos-23.11"; # we need python 3.9
+
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
     flake-utils = {
       url = "github:numtide/flake-utils";
@@ -22,6 +24,7 @@
   outputs =
     {
       self,
+      nixpkgs-2311,
       nixpkgs,
       flake-utils,
       treefmt-conf,
@@ -39,12 +42,25 @@
       let
         pkgs = import nixpkgs {
           inherit system;
+        };
+
+        pkgs-2311 = import nixpkgs-2311 {
+          inherit system;
           overlays = [
             pythonOverlay
           ];
         };
 
-        mdtPythonDeps = with pkgs.python39Packages; [
+        coralPkgs = with pkgs; [
+          edgetpu-compiler
+          # gasket
+        ];
+
+        coralDev = with pkgs; [
+          libedgetpu
+        ];
+
+        mdtPythonDeps = with pkgs-2311.python39Packages; [
           cffi
           bcrypt
           cryptography
@@ -57,15 +73,15 @@
 
         # https://pypi.org/project/mendel-development-tool/
         # https://coral.googlesource.com/mdt
-        mendel-development-tool = pkgs.python39Packages.buildPythonApplication rec {
+        mendel-development-tool = pkgs-2311.python39Packages.buildPythonApplication rec {
           pname = "mendel-development-tool";
           version = "1.5.2";
           name = "${pname}-${version}";
-          # src = pkgs.python39Packages.fetchPypi {
+          # src = pkgs-2311.python39Packages.fetchPypi {
           #   inherit pname version;
           #   hash = "sha256-FrOUa2BEj6u73YEixOmvUITy6LDD/m6nnn33Mu1kyLE=";
           # };
-          src = pkgs.fetchgit {
+          src = pkgs-2311.fetchgit {
             url = "https://coral.googlesource.com/mdt.git";
             rev = "fe0ff3d8aa50e983cb6609c7f4dd701319ce67";
             hash = "sha256-P+7UW24DCzqROxVTs89vBEX0z7uCWZWsgy0qgzm1aBE=";
@@ -79,7 +95,7 @@
         };
 
         # virtual env alternative
-        pythonSet = pkgs.python39.withPackages (
+        pythonSet = pkgs-2311.python39.withPackages (
           ps:
           with ps;
           [
@@ -114,13 +130,15 @@
                 self.packages.${system}.pip2nix
                 pythonSet
                 mendel-development-tool
-              ];
+              ]
+              ++ coralPkgs;
+
+            nativeBuildInputs = coralDev;
 
             shellHook = ''
               unset PYTHONPATH;
 
-              # old cowsay doesn't have mainProgram defined for pkgs.lib.getExe
-              ${pkgs.cowsay}/bin/cowsay "Welcome to Google Coral Python 3.9 .#default devShell!";
+              ${pkgs.lib.getExe pkgs.cowsay} "Welcome to Google Coral Python 3.9 .#default devShell!";
               printf "\n"
             '';
           };
