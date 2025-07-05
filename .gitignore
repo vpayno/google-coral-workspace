@@ -6,7 +6,7 @@
 /.devcontainer/scripts/data.tmp
 
 # nix
-/.result*
+/result*
 
 # direnv
 /.direnv
