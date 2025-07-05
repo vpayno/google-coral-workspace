@@ -36,3 +36,18 @@ else
     printf "Don't forget to run: %s\n" "source ~/.bashrc"
 fi
 ```
+
+## nix develop
+
+Adding `nix develop` shell with Python 3.9 and `mdt`.
+
+```text
+$ nix develop
+
+$ which mdt python3.9
+/nix/store/fgdnnjzhq2i72ps9s7hazyyl57i9038n-mendel-development-tool-1.5.2/bin/mdt
+/nix/store/zq6k7mxqh5xmyhy8y37cyn1p0h38b8k3-python3-3.9.2-env/bin/python3.9
+
+$ mdt version
+MDT version 1.5.2
+```
