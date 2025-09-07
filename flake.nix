@@ -113,7 +113,7 @@
         packages = {
           python39 = pythonSet;
           inherit mendel-development-tool;
-          pip2nix = pip2nix.packages.${system}.pip2nix.python39;
+          pip2nix = pip2nix.packages.${system}.pip2nix_python39;
         };
 
         devShells = {
